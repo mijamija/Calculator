@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i=string.length()-1;i>=0;i--)
         {
-            if(((string.charAt(i) == '+')||(string.charAt(i) == '-')||(string.charAt(i) == '*')||(string.charAt(i) == '+'))
+            if(((string.charAt(i) == '+')||(string.charAt(i) == '-')||(string.charAt(i) == '*')||(string.charAt(i) == '/'))
                     &&flagDot==false)
                 return true;
             if(string.charAt(i)=='.' && flagDot==false)
