@@ -31,17 +31,25 @@ public class MainActivity extends AppCompatActivity {
     {
         Button button = (Button) view;
         String temp = screen.getText().toString();
-        if(temp != "")
+
+        if(temp.equals("") && button.getText().toString().equals("-"))
+            screen.setText("-");
+
+        if(!temp.equals(""))
         {
-            if((temp.charAt(temp.length()-1) != '+')&&(temp.charAt(temp.length()-1) != '-')
-                &&(temp.charAt(temp.length()-1) != '*')&&(temp.charAt(temp.length()-1) != '/')
-                &&(temp.charAt(temp.length()-1) != '.'))
+            if(button.getText().toString().equals("-") && isOnlyNumber(temp.substring(0,temp.length()-1))
+                    && (temp.charAt(temp.length()-1) != '.') && (temp.charAt(temp.length()-1) != '-'))
+                screen.setText(temp + button.getText().toString());
+
+            if((temp.charAt(temp.length()-1) != '+')&&(temp.charAt(temp.length()-1) != '*')
+                    &&(temp.charAt(temp.length()-1) != '/')&&(temp.charAt(temp.length()-1) != '.')
+            &&(temp.charAt(temp.length()-1) != '-'))
             {
                 if(isOnlyNumber(temp))
                     screen.setText(temp + button.getText().toString());
                 else
                 {
-                    screen.setText(calculate(temp));
+                    screen.setText(calculate(temp) + button.getText().toString());
                 }
             }
         }
@@ -52,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     {
         String temp=screen.getText().toString();
 
-        if(temp != "")
+        if(!temp.equals(""))
         if((temp.charAt(temp.length()-1) != '+')&&(temp.charAt(temp.length()-1) != '-')
                 &&(temp.charAt(temp.length()-1) != '*')&&(temp.charAt(temp.length()-1) != '/')
                 &&(temp.charAt(temp.length()-1) != '.'))
@@ -67,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     public void Delete(View view)
     {
         String temp=screen.getText().toString();
-        if(screen.getText().toString() != "")
+        if(!temp.equals(""))
         {
             screen.setText(temp.substring(0,temp.length()-1));
         }
@@ -77,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Button button = (Button) view;
         String temp = screen.getText().toString();
-        if(temp != "")
+        if(!temp.equals(""))
         {
             if((temp.charAt(temp.length()-1) != '+')&&(temp.charAt(temp.length()-1) != '-')
                     &&(temp.charAt(temp.length()-1) != '*')&&(temp.charAt(temp.length()-1) != '/')
@@ -108,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isOnlyNumber(String string)
     {
-        for(int i=0;i<string.length();i++)
+        for(int i=1;i<string.length();i++)
         {
             if((string.charAt(i) < '0' || string.charAt(i) > '9')&& string.charAt(i) != '.')
                 return false;
@@ -118,11 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
     public String calculate(String string)
     {
-        double number1,number2,resultDouble;
-        int k;
+        double number1=0,number2=0,resultDouble;
+        int k=string.length();
         String result;
 
-        for(int i=0;;i++)
+        for(int i=1;i<string.length();i++)
         {
             if((string.charAt(i)<'0' || string.charAt(i)>'9') && string.charAt(i) != '.')
             {
@@ -132,27 +140,36 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        number2=Double.parseDouble(string.substring(k+1,string.length()));
+        if(k != string.length()) {
+            number2 = Double.parseDouble(string.substring(k + 1, string.length()));
 
-        if(string.charAt(k)=='+')
-            resultDouble=number1+number2;
-        else if(string.charAt(k)=='-')
-            resultDouble=number1-number2;
-        else if(string.charAt(k)=='*')
-            resultDouble=number1*number2;
-        else
-        {
-            if(number2==0)
-            {
-                Toast.makeText(this, "Don't devide with zero!!!", Toast.LENGTH_SHORT).show();
-                return string.substring(0,string.length()-1);
+            if (string.charAt(k) == '+')
+                resultDouble = number1 + number2;
+            else if (string.charAt(k) == '-')
+                resultDouble = number1 - number2;
+            else if (string.charAt(k) == '*')
+                resultDouble = number1 * number2;
+            else {
+                if (number2 == 0) {
+                    Toast.makeText(this, "Don't devide with zero!!!", Toast.LENGTH_SHORT).show();
+
+                    for(int i=string.length()-1;i>=0;i--)
+                        if(string.charAt(i) == '/')
+                        {
+                            k=i+1;
+                            break;
+                        }
+
+                    return string.substring(0,k);
+                } else
+                    resultDouble = number1 / number2;
             }
-            else
-            resultDouble = number1 / number2;
+
+            result = "" + resultDouble;
+
+            return result;
         }
-
-        result=""+resultDouble;
-
-        return result;
+        else
+            return string;
     }
 }
