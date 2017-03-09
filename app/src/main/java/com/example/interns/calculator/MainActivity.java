@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
                     screen.setText(calculate(temp) + button.getText().toString());
                 }
             }
+            else
+            {
+                screen.setText(temp.substring(0,temp.length()-1)+button.getText().toString());
+            }
         }
 
     }
@@ -61,10 +65,19 @@ public class MainActivity extends AppCompatActivity {
         String temp=screen.getText().toString();
 
         if(!temp.equals(""))
+
         if((temp.charAt(temp.length()-1) != '+')&&(temp.charAt(temp.length()-1) != '-')
                 &&(temp.charAt(temp.length()-1) != '*')&&(temp.charAt(temp.length()-1) != '/')
                 &&(temp.charAt(temp.length()-1) != '.'))
-        screen.setText(calculate(screen.getText().toString()));
+        {
+            if(isOnlyNumber(temp))
+            {
+                long power=Long.parseLong(temp);
+                screen.setText(""+(power*power));
+            }
+            else
+            screen.setText(calculate(screen.getText().toString()));
+        }
     }
 
     public void Clear(View view)
@@ -106,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             if(((string.charAt(i) == '+')||(string.charAt(i) == '-')||(string.charAt(i) == '*')||(string.charAt(i) == '/'))
                     &&flagDot==false)
                 return true;
-            if(string.charAt(i)=='.' && flagDot==false)
+            if(string.charAt(i)=='.' && !flagDot)
                 flagDot=true;
             if(string.charAt(i)=='.' && flagDot==true)
                 return false;
